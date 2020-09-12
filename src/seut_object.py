@@ -7,7 +7,8 @@ from bpy.props  import (EnumProperty,
                         IntProperty,
                         StringProperty,
                         BoolProperty,
-                        PointerProperty
+                        PointerProperty,
+                        CollectionProperty
                         )
 
 from .seut_ot_recreateCollections   import SEUT_OT_RecreateCollections
@@ -108,4 +109,58 @@ class SEUT_Object(PropertyGroup):
         name='Pressurized When Open',
         description="Whether a mountpoint on a door block stays pressurized when the door is opened",
         default=False
+    )
+
+    particle_id: IntProperty(
+        name="Particle ID",
+        description="The unique ID of this particle effect",
+        min=0
+    )
+    particle_length: FloatProperty(
+        name="Length",
+        description="Length of the effect in seconds",
+        min=0,
+        unit='TIME'
+    )
+    particle_preload: IntProperty(
+        name="Preload",
+        description="TBD",
+        default=0
+    )
+    particle_lowres: BoolProperty(
+        name="Low Resolution",
+        description="TBD",
+        default=False
+    )
+    particle_loop: BoolProperty(
+        name="Loop",
+        description="Whether the effect is shown continuously",
+        default=True
+    )
+    particle_duration_min: FloatProperty(
+        name="Duration Min",
+        description="The minimum duration of the effect in seconds",
+        min=0,
+        unit='TIME'
+    )
+    particle_duration_max: FloatProperty(
+        name="Duration Max",
+        description="The maximum duration of the effect in seconds",
+        min=0,
+        unit='TIME'
+    )
+    particle_version: IntProperty(
+        name="Version",
+        description="The current version of the particle effect",
+        min=0
+    )
+    particle_priority: FloatProperty(
+        name="Priority",
+        description="TBD"
+    )
+    particle_distance_max: IntProperty(
+        name="Distance Max",
+        description="TBD",
+        min=0,
+        default=500
     )

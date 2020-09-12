@@ -67,6 +67,11 @@ from .materials.seut_ot_remapMaterials          import SEUT_OT_RemapMaterials
 from .materials.seut_ot_refreshMatLibs          import SEUT_OT_RefreshMatLibs
 from .materials.seut_ot_matCreate               import SEUT_OT_MatCreate
 from .materials.seut_matLib                     import SEUT_UL_MatLib
+from .particles.seut_pt_particleMenu            import SEUT_PT_ParticleMenu
+from .particles.seut_particleSystem             import SEUT_ParticlePropertyKeys
+from .particles.seut_particleSystem             import SEUT_ParticlePropertyValue2D
+from .particles.seut_particleSystem             import SEUT_ParticleProperty
+from .particles.seut_particleSystem             import SEUT_ParticleSystem
 from .utils.seut_ot_convertBoneNames            import SEUT_OT_ConvertBonesToBlenderFormat
 from .utils.seut_ot_convertBoneNames            import SEUT_OT_ConvertBonesToSEFormat
 from .utils.seut_updater                        import checkUpdate
@@ -115,6 +120,7 @@ classes = (
     SEUT_PT_Panel_Materials,
     SEUT_PT_Panel_MatLib,
     SEUT_PT_EmptyLink,
+    SEUT_PT_ParticleMenu,
     SEUT_OT_ExportMaterials,
     SEUT_MT_ContextMenu,
     SEUT_OT_GetUpdate,
@@ -153,6 +159,10 @@ classes = (
     SEUT_Materials,
     SEUT_OT_IconRender,
     SEUT_OT_IconRenderPreview,
+    SEUT_ParticlePropertyKeys,
+    SEUT_ParticlePropertyValue2D,
+    SEUT_ParticleProperty,
+    SEUT_ParticleSystem,
     SEUT_MountpointAreas,
     SEUT_Scene,
     SEUT_Object,
@@ -173,6 +183,7 @@ def register():
     bpy.types.Material.seut = PointerProperty(type=SEUT_Materials)
     bpy.types.Scene.seut = PointerProperty(type=SEUT_Scene)
     bpy.types.Object.seut = PointerProperty(type=SEUT_Object)
+    bpy.types.ParticleSystem.seut = PointerProperty(type=SEUT_ParticleSystem)
     bpy.types.WindowManager.seut = PointerProperty(type=SEUT_WindowManager)
 
     bpy.app.handlers.load_post.append(load_handler)
@@ -190,6 +201,7 @@ def unregister():
     del bpy.types.Material.seut
     del bpy.types.Scene.seut
     del bpy.types.Object.seut
+    del bpy.types.ParticleSystem.seut
     del bpy.types.WindowManager.seut
 
     bpy.app.handlers.load_post.remove(load_handler)
