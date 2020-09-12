@@ -37,20 +37,23 @@ class SEUT_PT_Panel(Panel):
             box = layout.box()
             box.label(text=scene.name, icon_value=layout.icon(scene))
             box.prop(scene.seut, 'sceneType')
-            if scene.seut.sceneType != 'character' and scene.seut.sceneType != 'character_anmiation':
+            if scene.seut.sceneType == 'mainScene' or scene.seut.sceneType == 'mirror' or scene.seut.sceneType == 'subpart':
                 box.prop(scene.seut,'linkSubpartInstances')
             
             box = layout.box()
-            if scene.seut.sceneType == 'mainScene' or scene.seut.sceneType == 'mirror':
+            if scene.seut.sceneType == 'mainScene' or scene.seut.sceneType == 'mirror' or scene.seut.sceneType == 'particle_effect':
                 box.label(text="SubtypeId (File Name)", icon='COPY_ID')
+
             elif scene.seut.sceneType == 'subpart' or scene.seut.sceneType == 'character' or scene.seut.sceneType == 'character_animation':
                 box.label(text="File Name", icon='FILE')
+
             box.prop(scene.seut, "subtypeId", text="", expand=True)
 
-            box = layout.box()
-            box.label(text="Grid Scale", icon='GRID')
-            row = box.row()
-            row.prop(scene.seut,'gridScale', expand=True)
+            if scene.seut.sceneType == 'mainScene' or scene.seut.sceneType == 'mirror' or scene.seut.sceneType == 'subpart':
+                box = layout.box()
+                box.label(text="Grid Scale", icon='GRID')
+                row = box.row()
+                row.prop(scene.seut,'gridScale', expand=True)
             
             layout.operator('object.recreate_collections', icon='COLLECTION_NEW')
             
@@ -64,6 +67,11 @@ class SEUT_PT_Panel_BoundingBox(Panel):
     bl_category = "SEUT"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"
+
+    @classmethod
+    def poll(cls, context):
+        scene = context.scene
+        return scene.seut.sceneType == 'mainScene' or scene.seut.sceneType == 'mirror' or scene.seut.sceneType == 'subpart'
 
     def draw(self, context):
         layout = self.layout
@@ -104,7 +112,7 @@ class SEUT_PT_Panel_Mirroring(Panel):
     @classmethod
     def poll(cls, context):
         scene = context.scene
-        return scene.seut.sceneType != 'character' and scene.seut.sceneType != 'character_animation' and scene.seut.sceneType != 'subpart'
+        return scene.seut.sceneType == 'mainScene'
 
     def draw(self, context):
         layout = self.layout
@@ -131,7 +139,7 @@ class SEUT_PT_Panel_Mountpoints(Panel):
     @classmethod
     def poll(cls, context):
         scene = context.scene
-        return scene.seut.sceneType != 'character' and scene.seut.sceneType != 'character_animation' and scene.seut.sceneType != 'subpart'
+        return scene.seut.sceneType == 'mainScene' or scene.seut.sceneType == 'mirror'
 
     def draw(self, context):
         layout = self.layout
@@ -167,7 +175,7 @@ class SEUT_PT_Panel_IconRender(Panel):
     @classmethod
     def poll(cls, context):
         scene = context.scene
-        return scene.seut.sceneType != 'character' and scene.seut.sceneType != 'character_animation' and scene.seut.sceneType != 'subpart'
+        return scene.seut.sceneType == 'mainScene' or scene.seut.sceneType == 'mirror' or scene.seut.sceneType == 'character'
 
     def draw(self, context):
         layout = self.layout
@@ -242,23 +250,29 @@ class SEUT_PT_Panel_Export(Panel):
             # Export
             row = layout.row()
             row.scale_y = 2.0
-            row.operator('scene.export_all_scenes', icon='EXPORT')
-            row = layout.row()
-            row.scale_y = 1.1
-            row.operator('scene.export', icon='EXPORT')
+
+            if scene.seut.sceneType != 'particle_effect':
+                row.operator('scene.export_all_scenes', icon='EXPORT')
+                row = layout.row()
+                row.scale_y = 1.1
+                row.operator('scene.export', icon='EXPORT')
+            else:
+                row.operator('scene.export_all_scenes', icon='EXPORT')
 
             # Options
             box = layout.box()
             box.label(text="Options", icon='SETTINGS')
-        
-            row = box.row()
-            split = box.split(factor=0.70)
-            col = split.column()
-            col.prop(scene.seut, "export_deleteLooseFiles")
-            col = split.column()
-            col.prop(scene.seut, "export_sbc")
 
-            if scene.seut.sceneType != 'character' and scene.seut.sceneType != 'character_anmiation':
+            if scene.seut.sceneType != 'particle_effect':
+                row = box.row()
+                split = box.split(factor=0.70)
+                col = split.column()
+                col.prop(scene.seut, "export_deleteLooseFiles")
+                if scene.seut.sceneType != 'character' and scene.seut.sceneType != 'character_animation':
+                    col = split.column()
+                    col.prop(scene.seut, "export_sbc")
+
+            if scene.seut.sceneType == 'mainScene' or scene.seut.sceneType == 'mirror' or scene.seut.sceneType == 'subpart':
                 box2 = box.box()
                 box2.label(text="Grid Export", icon='GRID')
                 row = box2.row()
@@ -273,17 +287,18 @@ class SEUT_PT_Panel_Export(Panel):
             col.operator('scene.copy_export_folder', text="", icon='PASTEDOWN')
             
             # LOD
-            if collections['lod1'] is not None or collections['lod2'] is not None or collections['lod3'] is not None or collections['bs_lod'] is not None:
-                box = layout.box()
-                box.label(text="LOD Distance", icon='DRIVER_DISTANCE')
-                if collections['lod1'] is not None:
-                    box.prop(scene.seut, "export_lod1Distance")
-                if collections['lod2'] is not None:
-                    box.prop(scene.seut, "export_lod2Distance")
-                if collections['lod3'] is not None:
-                    box.prop(scene.seut, "export_lod3Distance")
-                if collections['bs_lod'] is not None:
-                    box.prop(scene.seut, "export_bs_lodDistance")
+            if scene.seut.sceneType == 'mainScene' or scene.seut.sceneType == 'mirror' or scene.seut.sceneType == 'subpart':
+                if collections['lod1'] is not None or collections['lod2'] is not None or collections['lod3'] is not None or collections['bs_lod'] is not None:
+                    box = layout.box()
+                    box.label(text="LOD Distance", icon='DRIVER_DISTANCE')
+                    if collections['lod1'] is not None:
+                        box.prop(scene.seut, "export_lod1Distance")
+                    if collections['lod2'] is not None:
+                        box.prop(scene.seut, "export_lod2Distance")
+                    if collections['lod3'] is not None:
+                        box.prop(scene.seut, "export_lod3Distance")
+                    if collections['bs_lod'] is not None:
+                        box.prop(scene.seut, "export_bs_lodDistance")
 
 
 class SEUT_PT_Panel_Import(Panel):
@@ -304,19 +319,23 @@ class SEUT_PT_Panel_Import(Panel):
             # Import
             row = layout.row()
             row.scale_y = 2.0
-            row.operator('scene.import', icon='IMPORT')
+            if scene.seut.sceneType != 'particle_effect':
+                row.operator('scene.import', icon='IMPORT')
+            else:
+                row.operator('scene.import', icon='IMPORT')
 
-            # Repair
-            box = layout.box()
-            box.label(text="Repair", icon='TOOL_SETTINGS')
-            box.operator('object.emptytocubetype', icon='EMPTY_DATA')
-            box.operator('object.remapmaterials', icon='MATERIAL')
-            box.operator('object.structure_conversion', icon='OUTLINER')
-            box.operator('object.attempt_to_fix_positioning', icon='EMPTY_AXIS')
-
-            if scene.seut.sceneType == 'character' or scene.seut.sceneType == 'character_animation':
-                # Bones
+            if scene.seut.sceneType != 'particle_effect':
+                # Repair
                 box = layout.box()
-                box.label(text="Bone Conversion", icon='ARMATURE_DATA')
-                box.operator('object.convertbonestoblenderformat', icon='OUTLINER_OB_ARMATURE')
-                box.operator('object.convertbonestoseformat', icon='OUTLINER_DATA_ARMATURE')
+                box.label(text="Repair", icon='TOOL_SETTINGS')
+                box.operator('object.emptytocubetype', icon='EMPTY_DATA')
+                box.operator('object.remapmaterials', icon='MATERIAL')
+                box.operator('object.structure_conversion', icon='OUTLINER')
+                box.operator('object.attempt_to_fix_positioning', icon='EMPTY_AXIS')
+
+                if scene.seut.sceneType == 'character' or scene.seut.sceneType == 'character_animation':
+                    # Bones
+                    box = layout.box()
+                    box.label(text="Bone Conversion", icon='ARMATURE_DATA')
+                    box.operator('object.convertbonestoblenderformat', icon='OUTLINER_OB_ARMATURE')
+                    box.operator('object.convertbonestoseformat', icon='OUTLINER_DATA_ARMATURE')

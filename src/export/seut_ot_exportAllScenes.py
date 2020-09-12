@@ -39,7 +39,8 @@ class SEUT_OT_ExportAllScenes(Operator):
             context.window.scene = scn
             print("SEUT Info: Exporting scene '" + scn.name + "'.")
             try:
-                bpy.ops.scene.export()
+                if scn.seut.sceneType != 'particle_effect':
+                    bpy.ops.scene.export()
             except RuntimeError:
                 notExportedCounter += 1
                 print("SEUT Info: Scene '" + scn.name + "' could not be exported.")
