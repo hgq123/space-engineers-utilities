@@ -35,7 +35,10 @@ class SEUT_OT_ExportParticle(Operator):
         definitions.set('xmlns:xsd', 'http://www.w3.org/2001/XMLSchema')
 
         cubeBlocks = ET.SubElement(definitions, 'ParticleEffects')
+
         # put a loop here for all objects in scene
+        save_particle(holder)
+
         def_definition = ET.SubElement(cubeBlocks, 'ParticleEffect')
         def_definition.set('xsi:type', 'ParticleEffect')
         
@@ -85,3 +88,10 @@ class SEUT_OT_ExportParticle(Operator):
         print("SEUT Info: '%s.sbc' has been created." % (path + filename))
 
         return {'FINISHED'}
+
+
+    def save_particle(holder):
+
+        # reads values from blender particle display and saves to seut data structure
+
+        return

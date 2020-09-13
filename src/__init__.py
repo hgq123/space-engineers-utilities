@@ -67,7 +67,6 @@ from .materials.seut_ot_remapMaterials          import SEUT_OT_RemapMaterials
 from .materials.seut_ot_refreshMatLibs          import SEUT_OT_RefreshMatLibs
 from .materials.seut_ot_matCreate               import SEUT_OT_MatCreate
 from .materials.seut_matLib                     import SEUT_UL_MatLib
-from .particles.seut_pt_particleMenu            import SEUT_PT_ParticleMenu
 from .particles.seut_particleSystem             import SEUT_ParticlePropertyKeys
 from .particles.seut_particleSystem             import SEUT_ParticlePropertyValue2D
 from .particles.seut_particleSystem             import SEUT_ParticleProperty
@@ -86,6 +85,7 @@ from .seut_pt_toolbar                   import SEUT_PT_Panel_BoundingBox
 from .seut_pt_toolbar                   import SEUT_PT_Panel_Mirroring
 from .seut_pt_toolbar                   import SEUT_PT_Panel_Mountpoints
 from .seut_pt_toolbar                   import SEUT_PT_Panel_IconRender
+from .seut_pt_toolbar                   import SEUT_PT_Panel_Particle
 from .seut_pt_toolbar                   import SEUT_PT_Panel_Export
 from .seut_pt_toolbar                   import SEUT_PT_Panel_Import
 from .seut_ot_import                    import SEUT_OT_Import
@@ -115,12 +115,12 @@ classes = (
     SEUT_PT_Panel_Mirroring,
     SEUT_PT_Panel_Mountpoints,
     SEUT_PT_Panel_IconRender,
+    SEUT_PT_Panel_Particle,
     SEUT_PT_Panel_Export,
     SEUT_PT_Panel_Import,
     SEUT_PT_Panel_Materials,
     SEUT_PT_Panel_MatLib,
     SEUT_PT_EmptyLink,
-    SEUT_PT_ParticleMenu,
     SEUT_OT_ExportMaterials,
     SEUT_MT_ContextMenu,
     SEUT_OT_GetUpdate,
